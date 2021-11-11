@@ -75,7 +75,6 @@ abstract contract InitListDebot is Debot, Upgradable {
         (uint res, bool status) = stoi("0x"+value);
         if (status) {
             m_masterPubKey = res;
-
             Terminal.print(0, "Checking if you already have a Shopping List ...");
             TvmCell deployState = tvm.insertPubkey(m_ShoppingListStateInit, m_masterPubKey);
             m_address = address.makeAddrStd(0, tvm.hash(deployState));

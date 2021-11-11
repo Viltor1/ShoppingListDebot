@@ -67,7 +67,7 @@ contract ShoppingList is IntShoppingList{
             timePurchase = purchase.timePurchase;
             isDone = purchase.isDone;
             price = purchase.price;
-            purchases.push(Purchase(id, name,count, price, timePurchase, isDone));
+            purchases.push(Purchase(id, name, count, price, timePurchase, isDone));
        }
     }
 
@@ -79,12 +79,12 @@ contract ShoppingList is IntShoppingList{
         for((, Purchase purchase) : m_purchase) {
             if  (purchase.isDone) {
                 numPaid ++;
+                total += purchase.price;
             } else {
                 numNotPaid ++;
             }
-            total += purchase.price;
         }
-        sumPurchases = SumPurchases( total, numPaid, numNotPaid );
+        sumPurchases = SumPurchases( numPaid, numNotPaid , total );
     }
     }
 

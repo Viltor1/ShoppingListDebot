@@ -27,33 +27,34 @@ contract ListAddingDebot is InitListDebot{
         string sep = '----------------------------------------';
         Menu.select(
             format(
-                "You have {}/{}/{} (Money Spent/Number of products purchased/Number of products not purchased)",
+                "You have {}/{}/{} (Total Money Spent/Number of products purchased/Number of products not purchased)",
                     m_sumPurchases.total,
                     m_sumPurchases.numPaid,
                     m_sumPurchases.numNotPaid
             ),
             sep,
             [
-                MenuItem("Show Shopping List","",tvm.functionId(showPurchase)),
-                MenuItem("Delete Purchase","",tvm.functionId(DeletePurchase)),
-                MenuItem("Make a Purchase","",tvm.functionId(MakePurchase))
+                MenuItem("Show Shopping List","",tvm.functionId(showPurchase1)),
+                MenuItem("Delete Purchase","",tvm.functionId(DeletePurchase1)),
+                MenuItem("Make a Purchase","",tvm.functionId(MakePurchase1))
             ]
         );
     }
 
-function MakePurchase(uint32 index) public {
+function MakePurchase1(uint32 index) public {
         index = index;
-        Terminal.input(tvm.functionId(MakePurchase_), "Enter purchase number:", false);
-        _menu();
+        Terminal.input(tvm.functionId(MakePurchase1_), "Enter purchase number:", false);
     }
 
-    function MakePurchase_(string value) public {
+    function MakePurchase1_(string value) public {
         (uint256 num,) = stoi(value);
         m_purchaseId = uint32(num);
-        Terminal.input(tvm.functionId(MakePurchase__), "Enter price: ", false);
+        Terminal.input(tvm.functionId(MakePurchase1__), "Enter price: ", false);
     }
 
-    function MakePurchase__(string value) public {
+    function MakePurchase1__(string value) public {
+        (uint256 num,) = stoi(value);
+        m_purchasePrice = uint32(num);
         optional(uint256) pubkey = 0;
         IntShoppingList(m_address).makePurchase{
                 abiVer: 2,
@@ -67,7 +68,7 @@ function MakePurchase(uint32 index) public {
             }(m_purchaseId, m_purchasePrice);
     }
 
-    function showPurchase(uint32 index) public view {
+    function showPurchase1(uint32 index) public view {
         index = index;
         optional(uint256) none;
         IntShoppingList(m_address).getPurchases{
@@ -77,12 +78,12 @@ function MakePurchase(uint32 index) public {
             pubkey: none,
             time: uint64(now),
             expire: 0,
-            callbackId: tvm.functionId(showPurchase_),
+            callbackId: tvm.functionId(showPurchase1_),
             onErrorId: 0
         }();
     }
 
-    function showPurchase_( Purchase[] purchases ) public {
+    function showPurchase1_( Purchase[] purchases ) public {
         uint32 i;
         if (purchases.length > 0 ) {
             Terminal.print(0, "Your purchases list:");
@@ -103,17 +104,17 @@ function MakePurchase(uint32 index) public {
     }
 
 
-    function DeletePurchase(uint32 index) public {
+    function DeletePurchase1(uint32 index) public {
         index = index;
         if (m_sumPurchases.numPaid + m_sumPurchases.numNotPaid > 0) {
-            Terminal.input(tvm.functionId(DeletePurchase_), "Enter purcase number:", false);
+            Terminal.input(tvm.functionId(DeletePurchase1_), "Enter purcase number:", false);
         } else {
             Terminal.print(0, "Sorry, you have no purchases to delete");
             _menu();
         }
     }
 
-    function DeletePurchase_(string value) public view {
+    function DeletePurchase1_(string value) public view {
         (uint256 num,) = stoi(value);
         optional(uint256) pubkey = 0;
         IntShoppingList(m_address).deletePurchase{
